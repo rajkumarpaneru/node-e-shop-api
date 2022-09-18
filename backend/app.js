@@ -31,6 +31,19 @@ app.post('/products', (req, res)=> {
     res.send(newProduct);
 });
 
+mongoose.connect(process.env.CONNECTION_STRING,
+    {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        dbName: 'E-shop'
+    })
+.then(()=>{
+    console.log('Database Connection is Ready ...');
+})
+.catch((err)=>{
+    console.log(err);
+})
+
 app.listen(3000, ()=>{
     console.log(api);
 })
