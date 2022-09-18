@@ -15,20 +15,54 @@ require('dotenv/config');
 const api = process.env.API_URL;
 
 
+//make schema
+const productSchema = mongoose.Schema({
+    name: String,
+    image: String,
+    countInStock: Number
+});
+
+
+//make model
+const Product = mongoose.model('Product', productSchema);
+
+
 app.get('/products', (req, res)=> {
     
-    const product = {
-        id: 1,
-        name: 't-shirt',
-        image: 'some_url',
-    };
-    res.send(product);
+    const products = Product.find()
+    .then((products)=> {
+        res.send(products);
+    })
+    .catch((err)=>{
+        res.status(500).json({
+            error: err,
+            success: false,
+        });
+    });
+
+    
 });
 
 app.post('/products', (req, res)=> {
-    const newProduct = req.body;
+    // const newProduct = req.body;
 
-    res.send(newProduct);
+    const product = new Product({
+        name: req.body.name,
+        image: req.body.image,
+        countInStock: req.body.countInStock,
+    });
+
+    product.save()
+    .then((createdProduct)=>{
+        res.status(201).json(createdProduct);
+    })
+    .catch((err)=>{
+        res.status(500).json({
+            error: err,
+            success: false,
+        });
+    });
+
 });
 
 mongoose.connect(process.env.CONNECTION_STRING,
