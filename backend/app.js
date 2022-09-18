@@ -27,20 +27,14 @@ const productSchema = mongoose.Schema({
 const Product = mongoose.model('Product', productSchema);
 
 
-app.get('/products', (req, res)=> {
+app.get('/products', async (req, res)=> {
     
-    const products = Product.find()
-    .then((products)=> {
-        res.send(products);
-    })
-    .catch((err)=>{
-        res.status(500).json({
-            error: err,
-            success: false,
-        });
-    });
+    const products = await Product.find();
 
-    
+    if(!products){
+        res.status(500).json({success: false});
+    }
+    res.status(200).json(products);
 });
 
 app.post('/products', (req, res)=> {
