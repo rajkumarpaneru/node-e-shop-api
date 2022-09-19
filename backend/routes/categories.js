@@ -28,4 +28,18 @@ router.post(`/`, async (req, res) =>{
         res.status(201).json(createdCategory);
 });
 
+router.delete(`/:id`, async (req, res) => {
+    Category.findByIdAndRemove(req.params.id)
+    .then(category => {
+        if(category){
+            return res.status(200).json({success: true, message: 'Category is deleted.'});
+        } else {
+            return res.status(404).json({success: false, message: 'Category not found'})
+        }
+    })
+    .catch(err => {
+        return res.status(400).json({success:false, error: err});
+    });
+});
+
 module.exports =router;
