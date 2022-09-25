@@ -18,10 +18,13 @@ const productsRoutes = require('./routes/products');
 
 const categoriesRoutes = require('./routes/categories');
 
+const usersRoutes = require('./routes/users');
+
 const api = process.env.API_URL;
 
 app.use(`/products`, productsRoutes);
 app.use(`/categories`, categoriesRoutes);
+app.use(`/users`,usersRoutes);
 
 
 //Database
