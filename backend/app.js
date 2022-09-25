@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const authJwt = require('./helpers/jwt');
+const errorHandler = require('./helpers/error-handler')
 require('dotenv/config');
 
 app.use(cors());
@@ -14,6 +15,11 @@ app.options('*', cors);
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
 app.use(authJwt);
+app.use((err, req, res, next) => {
+    if(err){
+        res.status(500).json({message: 'Error in the server'});
+    }
+});
 
 
 const productsRoutes = require('./routes/products');
