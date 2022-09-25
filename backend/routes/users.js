@@ -1,6 +1,8 @@
 const { User } = require("../models/user");
 const router = require("./products");
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { response } = require("express");
 
 router.get(`/`, async (req, res)=>{
     const userList = await User.find().select('-passwordHash');
@@ -45,4 +47,27 @@ router.get(`/:id`, async(req, res)=>{
 
  return res.status(200).send(user);
 
+});
+
+router.post('/login', async(req, res) => {
+    const user = await User.findOne({email: req.body.email});
+
+    if(!user){
+        return response.status(400).send('The user not found');
+    }
+
+    if(user && bcrypt.compareSync(req.body.password, user.passwordHash)){
+        
+        const token = jwt.sign({
+            userId: user.id,
+        }, 'secret',
+        {
+            expiresIn: '1w' // '1d' , '1m' 
+        });
+
+        res.status(200).send({user: user.email, token: token});
+    }else{
+        res.status(400).send('Invalid credentials');
+    }
+    return res.status(200).send(user);
 });
