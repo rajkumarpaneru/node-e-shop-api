@@ -3,7 +3,7 @@ const router = require("./products");
 const bcrypt = require('bcryptjs');
 
 router.get(`/`, async (req, res)=>{
-    const userList = await User.find();
+    const userList = await User.find().select('-passwordHash');
 
     if(!userList){
         return res.status(500).json({success: false})
@@ -34,4 +34,15 @@ router.post(`/`, async (req, res)=>{
     }
 
     return res.send(user);
+});
+
+router.get(`/:id`, async(req, res)=>{
+   
+ const user = await User.findById(req.params.id).select('-passwordHash');
+ if(!user){
+    res.status(500).json({message: 'The user with given id is not found.'});
+ }
+
+ return res.status(200).send(user);
+
 });
