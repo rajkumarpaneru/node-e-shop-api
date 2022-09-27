@@ -72,3 +72,14 @@ router.post('/login', async(req, res) => {
     }
     return res.status(200).send(user);
 });
+
+router.get(`/count`, async(req, res) => {
+    const count = await User.countDocuments((count) => count);
+
+    if(!count){
+        res.status(500).json({success: false})
+    }
+    res.send({
+        userCount: count,
+    });
+})
