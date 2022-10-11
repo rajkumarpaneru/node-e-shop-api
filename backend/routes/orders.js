@@ -4,7 +4,7 @@ const { OrderItem } = require('../models/order-item');
 const router = express.Router();
 
 router.get(`/`, async (req, res) => {
-    const orderList =await Order.find();
+    const orderList =await Order.find().populate('user');
 
     if(!orderList){
         return res.status(500).json({success: false});
