@@ -113,4 +113,15 @@ router.get(`/total-sales`, async (req, res) => {
     return res.send({totalSales: totalSales.pop().totalsales});
 })
 
+router.get(`/users/:userid/orders`, async (req, res) => {
+    const userOrderList =await Order.find({user: req.params.userId})
+    .populate({path: 'orderItems', populate: {path: 'product', populate: 'category'}})
+    .sort({'dateOrdered': -1});
+
+    if(!userOrderList){
+        return res.status(500).json({success: false});
+    }
+    return res.send(userOrderList);
+})
+
 module.exports = router;
