@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use(morgan('tiny'));
 app.use(authJwt);
 app.use('public/uploads', express.static(__dirname + 'public/uploads'));
-app.use(errorHandler);
+// app.use(errorHandler);
 app.use((err, req, res, next) => {
     if(err){
         res.status(500).json({message: 'Error in the server'});
@@ -30,12 +30,14 @@ const categoriesRoutes = require('./routes/categories');
 
 const usersRoutes = require('./routes/users');
 
+const ordersRoutes = require('./routes/orders');
+
 const api = process.env.API_URL;
 
 app.use(`/products`, productsRoutes);
 app.use(`/categories`, categoriesRoutes);
 app.use(`/users`,usersRoutes);
-
+app.use(`/orders`,ordersRoutes);
 
 //Database
 mongoose.connect(process.env.CONNECTION_STRING,
